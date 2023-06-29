@@ -16,11 +16,7 @@
         </Button>
       </div>
     </template>
-    <Column field="email">
-      <template #header>
-        <span class="text-center">Email</span>
-      </template>
-    </Column>
+    <Column field="email" header="Email" />
     <Column field="isActive" header="Status">
       <template #body="slotProps">
         <span :class="'users-badge status-' + slotProps.data.isActive">
@@ -35,7 +31,7 @@
         </span>
       </template>
     </Column>
-    <Column field="profile.name" header="Profile"></Column>
+    <Column field="profile.name" header="Profile" />
     <Column field="" header="Actions">
       <template #body="slotProps">
         <!-- <Button @click="showUser(slotProps.data.id)" icon="pi pi-eye" class="p-button-rounded p-button-text text-blue-600 hover:bg-blue-300 hover:text-white" v-tooltip.bottom="'Show user'" /> -->
@@ -44,32 +40,20 @@
       </template>
     </Column>
   </DataTable>
-  <Paginator
-    :rows="paginator.limit"
-    :total-records="totalUsers"
-    @page="showPaginate($event)"
-    :rows-per-page-options="itemsPerPage"
-    :template="{
-      '640px': 'PrevPageLink CurrentPageReport NextPageLink',
-      '960px': 'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
-      '1300px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-      default: 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown',
-    }"
-  >
-    <template #start="slotProps"> Showing {{ slotProps.state.first + 1 }} to {{ limitPaginate }} of {{ totalUsers }} </template>
-  </Paginator>
+  <PxPaginator :rows="paginator.limit" :total="totalUsers" :paginator="paginator" :limit-paginate="users.length" @show-paginate="showPaginate" />
   <user-create v-model="dialog" @close="closeModal" />
-  <user-detail v-model="showDetail" :user="idUser" @close="showDetail = !showDetail" />"
+  <user-detail v-model="showDetail" :user="idUser" @close="showDetail = !showDetail" />
 </template>
 
 <script setup lang="ts">
 import { onMounted, computed, watch, reactive, ref } from "vue"
 import UserService from "@/services/users/users"
 import UserCreate from "@/views/Users/pages/UserCreate.vue"
-import UserDetail from "./UserDetail.vue"
+import UserDetail from "@/views/Users/pages/UserDetail.vue"
 import PxInputSearch from "@/components/PxInputSearch.vue"
 import PxSearchStatus from "@/components/PxSearchStatus.vue"
 import PxDelete from "@/components/CRUD/PxDelete.vue"
+import PxPaginator from "@/components/PxPaginator.vue"
 import type { IPaginator } from "@/interfaces/paginate"
 import type { IUserSearch } from "@/views/Users/interfaces/userSeach"
 
@@ -78,7 +62,7 @@ const dialog = ref<boolean>(false)
 const showDetail = ref<boolean>(false)
 const idUser = ref<number>(0)
 
-const itemsPerPage = reactive<number[]>([5, 10, 15, 25, 50, 100])
+// const itemsPerPage = reactive<number[]>([5, 10, 15, 25, 50, 100])
 const paginator = reactive<IPaginator>({
   pagination: true,
   limit: 10,
@@ -137,11 +121,6 @@ const showPaginate = async (value: { page: number; rows: number }): Promise<void
 const totalUsers = computed(() => {
   const { total } = UserService.getPagination().value
   return total
-})
-
-/** CALCULA LIMITE DE PAGINA ACTUAL */
-const limitPaginate = computed(() => {
-  return paginator.offset * paginator.limit < totalUsers.value ? paginator.offset * users.value.length : totalUsers.value
 })
 
 watch(

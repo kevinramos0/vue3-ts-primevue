@@ -21,7 +21,7 @@ interface IModel {
   }[]
 }
 
-const model: Ref<Array<IModel>> = ref([
+const model: Ref<IModel[]> = ref([
   {
     label: "Home",
     items: [{ label: "Dashboard", icon: "pi pi-fw pi-home", to: "home" }],

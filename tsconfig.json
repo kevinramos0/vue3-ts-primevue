@@ -4,10 +4,10 @@
   "compilerOptions": {
     "ignoreDeprecations": "5.0",
     "useUnknownInCatchVariables": false,
-    "target": "es2017",
+    "target": "ESNext",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["src/*"]
     },
   },
 

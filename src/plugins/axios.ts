@@ -7,7 +7,7 @@ import { useAuthStore } from "@/stores"
 
 export default function axiosSetUp() {
   // point to your API endpoint
-  axios.defaults.baseURL = "http://localhost:8002"
+  axios.defaults.baseURL = "http://localhost:8005"
   // Add a request interceptor
   axios.interceptors.request.use(
     async (config) => {

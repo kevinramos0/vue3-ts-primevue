@@ -90,7 +90,7 @@ const handleCreatePassword = async (password: string): Promise<void> => {
   const token = route.query.token ?? ""
   await AuthService.createPassword(token.toString(), password)
   data.step = 2
-  data.body = ``
+  data.body = ""
   data.title = "Password created successfully"
 }
 

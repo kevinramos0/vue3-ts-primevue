@@ -65,7 +65,7 @@
   </Dialog>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ref, watch, reactive, onMounted, computed } from "vue"
 import { useVuelidate } from "@vuelidate/core"
 import { required, email, sameAs, minLength, maxLength, helpers } from "@vuelidate/validators"

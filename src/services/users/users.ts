@@ -64,7 +64,7 @@ class UserService {
       await API.put(`/api/users/${id}`, data)
       // this.alert.success("Role updated successfully")
     } catch (err) {
-      //  this.alert.error(err)
+      // this.alert.error(err)
     }
   }
 

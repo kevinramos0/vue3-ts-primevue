@@ -25,20 +25,7 @@
       </template>
     </Column>
   </DataTable>
-  <Paginator
-    :rows="paginator.limit"
-    :total-records="totalProfiles"
-    @page="showPagination($event)"
-    :rows-per-page-options="itemsPerPage"
-    :template="{
-      '640px': 'PrevPageLink CurrentPageReport NextPageLink',
-      '960px': 'FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink',
-      '1300px': 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink',
-      default: 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown',
-    }"
-  >
-    <template #start="slotProps"> Showing {{ slotProps.state.first + 1 }} to {{ limitPaginate }} of {{ totalProfiles }} </template>
-  </Paginator>
+  <PxPaginator :rows="paginator.limit" :total="totalProfiles" :paginator="paginator" :limit-paginate="profiles.length" @show-paginate="showPaginate" />
 </template>
 
 <script setup lang="ts">
@@ -49,10 +36,10 @@ import PxSearchStatus from "@/components/PxSearchStatus.vue"
 import PxDelete from "@/components/CRUD/PxDelete.vue"
 import type { IPaginator } from "@/interfaces/paginate"
 import type { IProfileSearch } from "@/views/Profiles/interfaces/search.interface"
+import PxPaginator from "@/components/PxPaginator.vue"
 
 const profiles = ProfileService.showProfiles()
 
-const itemsPerPage = reactive<number[]>([5, 10, 15, 25, 50, 100])
 const paginator = reactive<IPaginator>({
   pagination: true,
   limit: 10,
@@ -81,7 +68,7 @@ const deleteProfile = async (id: number): Promise<void> => {
   await getProfiles()
 }
 
-const showPagination = async (value: { page: number; rows: number }): Promise<void> => {
+const showPaginate = async (value: { page: number; rows: number }): Promise<void> => {
   const { page, rows } = value
   paginator.limit = rows
   paginator.offset = page + 1
@@ -96,10 +83,6 @@ const filterStatus = async (status: { name?: string; value: boolean | null }) =>
 const totalProfiles = computed(() => {
   const { total } = ProfileService.getPagination().value
   return total
-})
-/** CALCULA LIMITE DE PAGINA ACTUAL */
-const limitPaginate = computed(() => {
-  return paginator.offset * paginator.limit < totalProfiles.value ? paginator.offset * profiles.value.length : totalProfiles.value
 })
 
 watch(

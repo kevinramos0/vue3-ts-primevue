@@ -3,7 +3,7 @@
     <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">
       <i class="pi pi-bars"></i>
     </button>
-    <router-link to="/" class="layout-topbar-logo">
+    <router-link :to="{ name: 'home' }" class="layout-topbar-logo">
       <span>API USERS MANAGEMENT</span>
     </router-link>
 

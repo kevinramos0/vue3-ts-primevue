@@ -34,9 +34,7 @@
       </template>
     </Column>
   </DataTable>
-  <Paginator :rows="paginator.limit" :total-records="total" @page="show($event)" :rows-per-page-options="itemsPerPage">
-    <template #start="slotProps"> Showing {{ slotProps.state.first + 1 }} to {{ limitPaginate }} of {{ total }} </template>
-  </Paginator>
+  <PxPaginator :rows="paginator.limit" :total="totalModules" :paginator="paginator" :limit-paginate="modules.length" @show-paginate="showPaginate" />
 </template>
 
 <script setup lang="ts">
@@ -44,13 +42,13 @@ import { onMounted, computed, watch, reactive } from "vue"
 import ModuleService from "@/services/modules/moduleServices"
 import PxInputSearch from "@/components/PxInputSearch.vue"
 import PxSearchStatus from "@/components/PxSearchStatus.vue"
+import PxPaginator from "@/components/PxPaginator.vue"
 
 import type { IPaginator } from "@/interfaces/paginate"
 import type { IModuleSearch } from "@/views/Modules/interfaces/search.interface"
 
 const modules = ModuleService.showModules()
 
-const itemsPerPage = reactive<number[]>([5, 10, 15, 25, 50, 100])
 const paginator = reactive<IPaginator>({
   pagination: true,
   limit: 10,
@@ -77,17 +75,12 @@ const filterStatus = async (status: { name?: string; value: boolean | null }) =>
   await getModules()
 }
 
-const total = computed(() => {
+const totalModules = computed(() => {
   const { total } = ModuleService.getPagination().value
   return total
 })
 
-/** CALCULA LIMITE DE PAGINA ACTUAL */
-const limitPaginate = computed(() => {
-  return paginator.offset * paginator.limit < total.value ? paginator.offset * modules.value.length : total.value
-})
-
-const show = async (value: { page: number; rows: number }): Promise<void> => {
+const showPaginate = async (value: { page: number; rows: number }): Promise<void> => {
   const { page, rows } = value
   paginator.limit = rows
   paginator.offset = page + 1
